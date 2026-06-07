@@ -88,10 +88,12 @@ function Phone({
   );
   useFrame((state) => {
     const t = state.clock.elapsedTime * speed;
+    const s = scrollRef.current;
     if (ref.current) {
-      ref.current.rotation.y = rotation[1] + Math.sin(t * 0.6) * 0.25;
-      ref.current.rotation.x = rotation[0] + Math.cos(t * 0.5) * 0.1;
-      ref.current.position.y = position[1] + Math.sin(t * 1.1) * 0.12;
+      ref.current.rotation.y = rotation[1] + Math.sin(t * 0.6) * 0.25 + s * Math.PI * 1.2;
+      ref.current.rotation.x = rotation[0] + Math.cos(t * 0.5) * 0.1 + s * 0.4;
+      ref.current.position.y = position[1] + Math.sin(t * 1.1) * 0.12 + s * (position[1] > 0 ? 1.2 : -1.2);
+      ref.current.position.x = position[0] + s * (position[0] > 0 ? 1.6 : -1.6);
     }
   });
 
