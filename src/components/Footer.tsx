@@ -1,5 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { Github, Linkedin, Twitter, Instagram, Mail, MapPin, Phone } from "lucide-react";
+import logoAsset from "@/assets/inkotasoft-logo.png.asset.json";
 
 export function Footer() {
   return (
@@ -10,12 +11,12 @@ export function Footer() {
       <div className="relative container mx-auto px-4 py-16">
         <div className="grid md:grid-cols-4 gap-10">
           <div className="md:col-span-2">
-            <div className="flex items-center gap-2 mb-4">
-              <div className="h-10 w-10 rounded-xl bg-gold grid place-items-center font-display font-bold text-gold-foreground">I</div>
-              <div>
-                <div className="font-display font-bold">INKOTASOFT TECH LTD</div>
-                <div className="text-xs opacity-70 tracking-[0.2em]">INNOVATING DIGITAL SOLUTIONS</div>
-              </div>
+            <div className="mb-4 inline-block rounded-xl bg-white p-3">
+              <img
+                src={logoAsset.url}
+                alt="InkotaSoft Tech Ltd — Innovating Digital Solutions"
+                className="h-16 w-auto object-contain"
+              />
             </div>
             <p className="text-sm opacity-70 max-w-md leading-relaxed">
               We engineer premium software, mobile, and cloud experiences for ambitious
