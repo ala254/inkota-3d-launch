@@ -75,6 +75,10 @@ function Phone({
   speed?: number;
 }) {
   const ref = useRef<THREE.Group>(null!);
+  const screenTex = useMemo(
+    () => (screen === "fintech" ? createFintechScreen() : createDashboardScreen()),
+    [screen]
+  );
   useFrame((state) => {
     const t = state.clock.elapsedTime * speed;
     if (ref.current) {
