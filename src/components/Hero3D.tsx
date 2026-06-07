@@ -393,7 +393,13 @@ function Particles() {
     return arr;
   }, []);
   useFrame((_, dt) => {
-    if (ref.current) ref.current.rotation.y += dt * 0.02;
+    if (ref.current) {
+      const s = scrollRef.current;
+      ref.current.rotation.y += dt * 0.02;
+      ref.current.rotation.x = s * 0.6;
+      ref.current.position.y = -s * 2.4;
+      ref.current.position.z = s * 3;
+    }
   });
   return (
     <points ref={ref}>
@@ -405,13 +411,26 @@ function Particles() {
   );
 }
 
-/* ---------- Mouse parallax rig ---------- */
+/* ---------- Mouse + scroll parallax rig ---------- */
 function CameraRig() {
   const { camera, pointer } = useThree();
   useFrame(() => {
-    camera.position.x += (pointer.x * 1.2 - camera.position.x) * 0.04;
-    camera.position.y += (-pointer.y * 0.6 + 0.4 - camera.position.y) * 0.04;
-    camera.lookAt(0, 0, 0);
+    const s = scrollRef.current;
+    const targetX = pointer.x * 1.2;
+    const targetY = -pointer.y * 0.6 + 0.4 + s * 1.6;
+    const targetZ = 6.5 + s * 2.5;
+    camera.position.x += (targetX - camera.position.x) * 0.04;
+    camera.position.y += (targetY - camera.position.y) * 0.04;
+    camera.position.z += (targetZ - camera.position.z) * 0.04;
+    camera.lookAt(0, -s * 0.8, 0);
+  });
+  return null;
+}
+
+function ScrollDriver() {
+  const ref = useScrollProgressRef();
+  useFrame(() => {
+    scrollRef.current = ref.current;
   });
   return null;
 }
@@ -419,6 +438,7 @@ function CameraRig() {
 function Scene() {
   return (
     <>
+      <ScrollDriver />
       <PerspectiveCamera makeDefault position={[0, 0.4, 6.5]} fov={42} />
       <CameraRig />
 
