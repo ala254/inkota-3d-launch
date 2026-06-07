@@ -14,6 +14,7 @@ import * as THREE from "three";
 /* ---------- Realistic MacBook ---------- */
 function MacBook({ position = [0, 0, 0] as [number, number, number] }) {
   const group = useRef<THREE.Group>(null!);
+  const screenTex = useMemo(() => createLaptopScreen(), []);
   useFrame((state) => {
     const t = state.clock.elapsedTime;
     if (group.current) {
@@ -24,44 +25,34 @@ function MacBook({ position = [0, 0, 0] as [number, number, number] }) {
 
   return (
     <group ref={group} position={position} rotation={[0, -0.25, 0]} scale={1.1}>
-      {/* Base / keyboard deck */}
       <RoundedBox args={[2.6, 0.09, 1.75]} radius={0.04} smoothness={6} castShadow receiveShadow>
         <meshStandardMaterial color="#d8d8dc" metalness={0.85} roughness={0.28} envMapIntensity={1.2} />
       </RoundedBox>
-      {/* Keyboard area */}
-      <mesh position={[0, 0.046, 0.15]} receiveShadow>
-        <planeGeometry args={[2.3, 1.2]} rotation-x={-Math.PI / 2} />
+      <mesh position={[0, 0.046, 0.15]} rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
+        <planeGeometry args={[2.3, 1.2]} />
         <meshStandardMaterial color="#1a1a1f" metalness={0.5} roughness={0.6} />
       </mesh>
-      {/* Trackpad */}
       <mesh position={[0, 0.047, 0.62]} rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
         <planeGeometry args={[1.1, 0.7]} />
         <meshStandardMaterial color="#2a2a30" metalness={0.6} roughness={0.4} />
       </mesh>
 
-      {/* Screen — open at slight angle */}
       <group position={[0, 0.04, -0.86]} rotation={[-1.85, 0, 0]}>
-        {/* Lid */}
         <RoundedBox args={[2.6, 1.65, 0.06]} radius={0.04} smoothness={6} castShadow>
           <meshStandardMaterial color="#c8c8cc" metalness={0.9} roughness={0.25} envMapIntensity={1.4} />
         </RoundedBox>
-        {/* Bezel */}
         <mesh position={[0, 0, 0.032]}>
           <planeGeometry args={[2.5, 1.55]} />
           <meshStandardMaterial color="#000000" roughness={0.4} />
         </mesh>
-        {/* Screen content */}
-        <mesh position={[0, 0, 0.034]}>
-          <planeGeometry args={[2.35, 1.42]} />
-          <meshBasicMaterial>
-            <canvasTexture
-              attach="map"
-              args={[createLaptopScreen()]}
-              colorSpace={THREE.SRGBColorSpace}
-            />
-          </meshBasicMaterial>
-        </mesh>
-        {/* Apple-like notch */}
+        {screenTex && (
+          <mesh position={[0, 0, 0.034]}>
+            <planeGeometry args={[2.35, 1.42]} />
+            <meshBasicMaterial toneMapped={false}>
+              <canvasTexture attach="map" args={[screenTex]} colorSpace={THREE.SRGBColorSpace} />
+            </meshBasicMaterial>
+          </mesh>
+        )}
         <mesh position={[0, 0.7, 0.034]}>
           <planeGeometry args={[0.3, 0.06]} />
           <meshBasicMaterial color="#000000" />
