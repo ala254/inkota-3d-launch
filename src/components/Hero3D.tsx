@@ -21,9 +21,12 @@ function MacBook({ position = [0, 0, 0] as [number, number, number] }) {
   const screenTex = useMemo(() => createLaptopScreen(), []);
   useFrame((state) => {
     const t = state.clock.elapsedTime;
+    const s = scrollRef.current;
     if (group.current) {
-      group.current.rotation.y = Math.sin(t * 0.3) * 0.15 - 0.25;
-      group.current.position.y = position[1] + Math.sin(t * 0.8) * 0.08;
+      group.current.rotation.y = Math.sin(t * 0.3) * 0.15 - 0.25 + s * 1.4;
+      group.current.rotation.x = s * 0.35;
+      group.current.position.y = position[1] + Math.sin(t * 0.8) * 0.08 - s * 1.2;
+      group.current.position.z = -s * 1.5;
     }
   });
 
