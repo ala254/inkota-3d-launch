@@ -55,7 +55,7 @@ function Contact() {
             <div className="space-y-4">
               {[
                 { icon: Mail, label: "Email", value: "hello@inkotasoft.tech" },
-                { icon: Phone, label: "Phone", value: "+234 800 000 0000" },
+                { icon: Phone, label: "Phone", value: "+234 905 735 2833" },
                 { icon: MapPin, label: "Office", value: "Lagos, Nigeria" },
               ].map((c) => (
                 <div key={c.label} className="glass rounded-2xl p-5 flex items-start gap-4">
