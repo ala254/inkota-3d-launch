@@ -10,6 +10,10 @@ import {
 } from "@react-three/drei";
 import { Suspense, useRef, useMemo } from "react";
 import * as THREE from "three";
+import { useScrollProgressRef } from "@/lib/useScrollProgress";
+
+// Shared scroll progress ref, populated by <Scene /> and read by children.
+const scrollRef = { current: 0 };
 
 /* ---------- Realistic MacBook ---------- */
 function MacBook({ position = [0, 0, 0] as [number, number, number] }) {
