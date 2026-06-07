@@ -1,6 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { Menu, X, Moon, Sun } from "lucide-react";
+import logoAsset from "@/assets/inkotasoft-logo.png.asset.json";
 
 const links = [
   { to: "/", label: "Home" },
@@ -39,15 +40,11 @@ export function Navbar() {
           }`}
         >
           <Link to="/" className="flex items-center gap-2 group">
-            <div className="relative h-9 w-9 rounded-xl bg-navy grid place-items-center overflow-hidden">
-              <div className="absolute inset-0 bg-[var(--gradient-gold)] opacity-0 group-hover:opacity-100 transition-opacity" />
-              <span className="relative font-display font-bold text-background dark:text-foreground">I</span>
-              <div className="absolute -bottom-1 -right-1 h-3 w-3 rounded-full bg-gold animate-glow-pulse" />
-            </div>
-            <div className="leading-tight">
-              <div className="font-display font-bold text-sm tracking-tight">INKOTASOFT</div>
-              <div className="text-[10px] text-muted-foreground tracking-[0.2em]">TECH LTD</div>
-            </div>
+            <img
+              src={logoAsset.url}
+              alt="InkotaSoft Tech Ltd"
+              className="h-10 w-auto md:h-12 object-contain"
+            />
           </Link>
 
           <ul className="hidden md:flex items-center gap-1">
