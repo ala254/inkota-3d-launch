@@ -10,6 +10,10 @@ import {
 } from "@react-three/drei";
 import { Suspense, useRef, useMemo } from "react";
 import * as THREE from "three";
+import { useScrollProgressRef } from "@/lib/useScrollProgress";
+
+// Shared scroll progress ref, populated by <Scene /> and read by children.
+const scrollRef = { current: 0 };
 
 /* ---------- Realistic MacBook ---------- */
 function MacBook({ position = [0, 0, 0] as [number, number, number] }) {
@@ -17,9 +21,12 @@ function MacBook({ position = [0, 0, 0] as [number, number, number] }) {
   const screenTex = useMemo(() => createLaptopScreen(), []);
   useFrame((state) => {
     const t = state.clock.elapsedTime;
+    const s = scrollRef.current;
     if (group.current) {
-      group.current.rotation.y = Math.sin(t * 0.3) * 0.15 - 0.25;
-      group.current.position.y = position[1] + Math.sin(t * 0.8) * 0.08;
+      group.current.rotation.y = Math.sin(t * 0.3) * 0.15 - 0.25 + s * 1.4;
+      group.current.rotation.x = s * 0.35;
+      group.current.position.y = position[1] + Math.sin(t * 0.8) * 0.08 - s * 1.2;
+      group.current.position.z = -s * 1.5;
     }
   });
 
@@ -81,10 +88,12 @@ function Phone({
   );
   useFrame((state) => {
     const t = state.clock.elapsedTime * speed;
+    const s = scrollRef.current;
     if (ref.current) {
-      ref.current.rotation.y = rotation[1] + Math.sin(t * 0.6) * 0.25;
-      ref.current.rotation.x = rotation[0] + Math.cos(t * 0.5) * 0.1;
-      ref.current.position.y = position[1] + Math.sin(t * 1.1) * 0.12;
+      ref.current.rotation.y = rotation[1] + Math.sin(t * 0.6) * 0.25 + s * Math.PI * 1.2;
+      ref.current.rotation.x = rotation[0] + Math.cos(t * 0.5) * 0.1 + s * 0.4;
+      ref.current.position.y = position[1] + Math.sin(t * 1.1) * 0.12 + s * (position[1] > 0 ? 1.2 : -1.2);
+      ref.current.position.x = position[0] + s * (position[0] > 0 ? 1.6 : -1.6);
     }
   });
 
@@ -384,7 +393,13 @@ function Particles() {
     return arr;
   }, []);
   useFrame((_, dt) => {
-    if (ref.current) ref.current.rotation.y += dt * 0.02;
+    if (ref.current) {
+      const s = scrollRef.current;
+      ref.current.rotation.y += dt * 0.02;
+      ref.current.rotation.x = s * 0.6;
+      ref.current.position.y = -s * 2.4;
+      ref.current.position.z = s * 3;
+    }
   });
   return (
     <points ref={ref}>
@@ -396,13 +411,26 @@ function Particles() {
   );
 }
 
-/* ---------- Mouse parallax rig ---------- */
+/* ---------- Mouse + scroll parallax rig ---------- */
 function CameraRig() {
   const { camera, pointer } = useThree();
   useFrame(() => {
-    camera.position.x += (pointer.x * 1.2 - camera.position.x) * 0.04;
-    camera.position.y += (-pointer.y * 0.6 + 0.4 - camera.position.y) * 0.04;
-    camera.lookAt(0, 0, 0);
+    const s = scrollRef.current;
+    const targetX = pointer.x * 1.2;
+    const targetY = -pointer.y * 0.6 + 0.4 + s * 1.6;
+    const targetZ = 6.5 + s * 2.5;
+    camera.position.x += (targetX - camera.position.x) * 0.04;
+    camera.position.y += (targetY - camera.position.y) * 0.04;
+    camera.position.z += (targetZ - camera.position.z) * 0.04;
+    camera.lookAt(0, -s * 0.8, 0);
+  });
+  return null;
+}
+
+function ScrollDriver() {
+  const ref = useScrollProgressRef();
+  useFrame(() => {
+    scrollRef.current = ref.current;
   });
   return null;
 }
@@ -410,6 +438,7 @@ function CameraRig() {
 function Scene() {
   return (
     <>
+      <ScrollDriver />
       <PerspectiveCamera makeDefault position={[0, 0.4, 6.5]} fov={42} />
       <CameraRig />
 
