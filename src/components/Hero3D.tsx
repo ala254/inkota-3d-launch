@@ -99,16 +99,14 @@ function Phone({
         <meshStandardMaterial color="#3a3a44" metalness={1} roughness={0.3} transparent opacity={0.4} />
       </RoundedBox>
       {/* Screen */}
-      <mesh position={[0, 0, 0.046]}>
-        <planeGeometry args={[0.62, 1.32]} />
-        <meshBasicMaterial>
-          <canvasTexture
-            attach="map"
-            args={[screen === "fintech" ? createFintechScreen() : createDashboardScreen()]}
-            colorSpace={THREE.SRGBColorSpace}
-          />
-        </meshBasicMaterial>
-      </mesh>
+      {screenTex && (
+        <mesh position={[0, 0, 0.046]}>
+          <planeGeometry args={[0.62, 1.32]} />
+          <meshBasicMaterial toneMapped={false}>
+            <canvasTexture attach="map" args={[screenTex]} colorSpace={THREE.SRGBColorSpace} />
+          </meshBasicMaterial>
+        </mesh>
+      )}
       {/* Dynamic island */}
       <mesh position={[0, 0.58, 0.047]}>
         <planeGeometry args={[0.22, 0.05]} />
