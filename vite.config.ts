@@ -1,29 +1,9 @@
-{ 
-  "buildCommand": "npm run build",
-  "outputDirectory": "dist/client",
-  "framework": "vite",
-  "functions": { 
-    "dist/server/index.js": { 
-      "runtime": "nodejs20.x"
+import { defineConfig } from "@lovable.dev/vite-tanstack-config";
 
-    } 
+export default defineConfig({
+  tanstackStart: {
+    server: {
+      entry: "server",
+    },
   },
-  "routes": [ 
-    { 
-      "src": "/_server/(.*)",
-      "dest" "/dist/server/index.js"
-    },
-    { 
-      "src": "/favicon.ico",
-      "dest": "/dist/client/favicon.ico"
-    },
-    { 
-      "src": "/assets/(.*)",
-      "dest": "/dist/client/assets/$1"
-    },
-    { 
-      "src": "/(.*)",
-      "dest": "/dist/client/index.html" 
-    } 
-  ]
-} 
+});
